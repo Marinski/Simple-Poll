@@ -1,34 +1,7 @@
 <?php require_once('Connections/conn_vote.php'); ?>
+<?php require_once('functions.php'); ?>
+
 <?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? "'" . doubleval($theValue) . "'" : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
-
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
@@ -59,59 +32,14 @@ $query_rs_vote = sprintf("SELECT * FROM poll WHERE id = %s", GetSQLValueString($
 $rs_vote = mysql_query($query_rs_vote, $conn_vote) or die(mysql_error());
 $row_rs_vote = mysql_fetch_assoc($rs_vote);
 $totalRows_rs_vote = mysql_num_rows($rs_vote);
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Poll</title>
-<link href="style.css" rel="stylesheet" type="text/css" />
-</head>
+?>
 
-<body>
 
-<fieldset>
+<?php require_once('header.php'); ?>
 
-	<legend>What is your JavaScript library of choice?</legend>
-	
-	<form action="<?php echo $editFormAction; ?>" id="form1" name="form1" method="POST">
-    
-    <label>
-    	<input type="radio" name="Poll" value="mootools" id="Poll_0" />
-     	Mootools
-     </label>
-     
-    <label>
-    	<input type="radio" name="Poll" value="prototype" id="Poll_1" />
-      	Prototype
-    </label>
-    
-    <label>
-    	<input type="radio" name="Poll" value="jquery" id="Poll_2" />
-		jQuery
-	</label>
-	
-    <label>
-    	<input type="radio" name="Poll" value="spry" id="Poll_3" />
-		Spry
-	</label>
+<?php require_once('poll-fieldset.php'); ?>
 
-    <label>
-    	<input type="radio" name="Poll" value="other" id="Poll_4" />
-		Other
-	</label>
-
-    <input type="submit" name="submit" id="submit" value="Vote" />
-    
-	<input type="hidden" name="id" value="form1" />
-	
-	<input type="hidden" name="MM_insert" value="form1" />
-</form>
-
-</fieldset>
-
-</body>
-</html>
-
+<?php require_once('footer.php'); ?>
 
 <?php
 mysql_free_result($rs_vote);
